@@ -4,7 +4,7 @@ Gem::Specification.new do |s|
   s.summary       = 'Stream events from RDS to Logstash'
 
   s.authors       = ['Andrew Schleifer']
-  s.email         = 'me@andrewschleifer.name'
+  s.email         = ['me@andrewschleifer.name']
 
   s.require_paths = ['lib']
   s.files = Dir['lib/**/*','spec/**/*','vendor/**/*','*.gemspec','*.md','CONTRIBUTORS','Gemfile','LICENSE','NOTICE.TXT']
