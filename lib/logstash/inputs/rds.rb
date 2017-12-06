@@ -14,14 +14,14 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
   milestone 1
   default :codec, "plain"
 
-  config :instance_identifier, :validate => :string, :required => true
+  config :instance_name, :validate => :string, :required => true
   config :log_file_name, :validate => :string, :required => true
   config :polling_frequency, :validate => :number, :default => 600
 
   def register
     require "aws-sdk"
-    @logger.info "Registering RDS input", :instance_identifier => @instance_identifier
-    @database = Aws::RDS::DBInstance.new @instance_identifier, aws_options_hash
+    @logger.info "Registering RDS input", :instance_name => @instance_name
+    @database = Aws::RDS::DBInstance.new @instance_name, aws_options_hash
     @sincedate = filename2datetime "1999-01-01-01" # FIXME sincedb
   end
 
@@ -42,7 +42,7 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
           response = logfile.download({marker: marker})
           response[:log_file_data].lines.each do |line|
             @codec.decode(line) do |event|
-              event.set "rds-instance", @instance_identifier
+              event.set "rds-instance", @instance_name
               event.set "log-file", @log_file_name
               queue << event
             end
