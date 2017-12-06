@@ -22,7 +22,7 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
     require "aws-sdk"
     @logger.info "Registering RDS input", :instance_identifier => @instance_identifier
     @database = Aws::RDS::DBInstance.new @instance_identifier, aws_options_hash
-    @sincedate = filename2datetime "1999-01-01-01" # FIXME
+    @sincedate = filename2datetime "1999-01-01-01" # FIXME sincedb
   end
 
   def run(queue)
