@@ -5,6 +5,7 @@ Gem::Specification.new do |s|
 
   s.authors       = ['Andrew Schleifer']
   s.email         = ['me@andrewschleifer.name']
+  s.homepage      = 'https://github.com/discourse/logstash-input-rds'
 
   s.require_paths = ['lib']
   s.files = Dir['lib/**/*','spec/**/*','vendor/**/*','*.gemspec','*.md','CONTRIBUTORS','Gemfile','LICENSE','NOTICE.TXT']
