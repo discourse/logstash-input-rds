@@ -43,8 +43,8 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
           response[:log_file_data].lines.each do |line|
             @codec.decode(line) do |event|
               decorate event
-              event.set "rds-instance", @instance_name
-              event.set "log-file", @log_file_name
+              event.set "rds_instance", @instance_name
+              event.set "log_file", @log_file_name
               queue << event
             end
           end
