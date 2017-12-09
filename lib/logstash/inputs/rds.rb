@@ -20,14 +20,14 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
 
   def register
     require "aws-sdk"
-    @logger.info "Registering RDS input", :instance_name => @instance_name
+    @logger.info "Registering RDS input", :region => @region, :instance => @instance_name, :log_file => @log_file_name
     @database = Aws::RDS::DBInstance.new @instance_name, aws_options_hash
     @sincedate = filename2datetime "1999-01-01-01" # FIXME sincedb
   end
 
   def run(queue)
     Stud.interval(@polling_frequency) do
-      @logger.info "finding files starting #{@sincedate} (#{@sincedate.to_i * 1000})"
+      @logger.debug "finding files starting #{@sincedate} (#{@sincedate.to_i * 1000})"
 
       logfiles = @database.log_files({
         filename_contains: @log_file_name,
@@ -42,6 +42,7 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
           response = logfile.download({marker: marker})
           response[:log_file_data].lines.each do |line|
             @codec.decode(line) do |event|
+              decorate event
               event.set "rds-instance", @instance_name
               event.set "log-file", @log_file_name
               queue << event
