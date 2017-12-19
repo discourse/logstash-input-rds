@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
   s.name          = 'logstash-input-rds'
   s.version       = '0.13.0'
-  s.summary       = 'Stream events from RDS to Logstash'
+  s.summary       = 'Ingest RDS log files to Logstash'
 
   s.authors       = ['Andrew Schleifer']
   s.email         = ['me@andrewschleifer.name']
