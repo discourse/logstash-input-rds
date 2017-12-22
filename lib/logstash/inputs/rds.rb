@@ -26,6 +26,7 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
   end
 
   def run(queue)
+    @thread = Thread.current
     Stud.interval(@polling_frequency) do
       @logger.debug "finding files starting #{@sincedate} (#{@sincedate.to_i * 1000})"
 
@@ -53,6 +54,10 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
         end
       end
     end
+  end
+
+  def stop
+    Stud.stop! @thread
   end
 
   def filename2datetime(name)
