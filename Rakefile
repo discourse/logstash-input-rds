@@ -1,5 +1,7 @@
 require "logstash/devutils/rake"
 
+task :default => :build
+
 task :build do
 	sh "gem build logstash-input-rds"
 end
