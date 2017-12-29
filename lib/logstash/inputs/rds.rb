@@ -2,7 +2,9 @@
 require "logstash/inputs/base"
 require "logstash/namespace"
 require "stud/interval"
+require "aws-sdk"
 require "logstash/inputs/rds/patch"
+require "logstash/plugin_mixins/aws_config"
 require "time"
 
 Aws.eager_autoload!
