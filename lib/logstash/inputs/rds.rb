@@ -30,12 +30,13 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
   def run(queue)
     @thread = Thread.current
     Stud.interval(@polling_frequency) do
-      @logger.debug "finding files starting #{@sincedb.read} (#{@sincedb.read.to_i * 1000})"
+      @logger.debug "finding #{@log_file_name} for #{@instance_name} starting #{@sincedb.read} (#{@sincedb.read.to_i * 1000})"
       logfiles = @database.log_files({
         filename_contains: @log_file_name,
         file_last_written: @sincedb.read.to_i * 1000,
       })
       logfiles.each do |logfile|
+        @logger.debug "downloading #{logfile.name} for #{@instance_name}"
         more = true
         marker = "0"
         while more do
