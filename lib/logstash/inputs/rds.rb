@@ -66,5 +66,26 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
     parts = name.match /(\d{4})-(\d{2})-(\d{2})-(\d{2})$/
     Time.utc parts[1], parts[2], parts[3], parts[4]
   end
-end
 
+  private
+  module SinceDB
+    class File
+      def initialize(file)
+        @db = file
+      end
+
+      def read
+        if ::File.exists?(@db)
+          content = ::File.read(@db).chomp.strip
+          return content.empty? ? Time.new : Time.parse(content)
+        else
+          return Time.new("1999-01-01")
+        end
+      end
+
+      def write(time)
+        ::File.open(@db, 'w') { |file| file.write time.to_s }
+      end
+    end
+  end
+end
