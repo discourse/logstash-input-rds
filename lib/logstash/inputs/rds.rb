@@ -24,7 +24,7 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
     require "aws-sdk"
     @logger.info "Registering RDS input", :region => @region, :instance => @instance_name, :log_file => @log_file_name
     @database = Aws::RDS::DBInstance.new @instance_name, aws_options_hash
-    @sincedb = SinceDB::File.new(File.join(ENV["HOME"], ".sincedb_" + Digest::MD5.hexdigest("#{@instance_name}+#{@log_file_name}")))
+    @sincedb = SinceDB::File.new File.join(ENV["HOME"], ".sincedb_" + Digest::MD5.hexdigest("#{@instance_name}+#{@log_file_name}"))
   end
 
   def run(queue)
