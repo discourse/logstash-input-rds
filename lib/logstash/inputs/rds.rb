@@ -63,8 +63,8 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
   end
 
   def filename2datetime(name)
-    fragments = name.match /(\d{4})-(\d{2})-(\d{2})-(\d{2})$/
-    Time.parse "#{fragments[1]}-#{fragments[2]}-#{fragments[3]} #{fragments[4]}"
+    parts = name.match /(\d{4})-(\d{2})-(\d{2})-(\d{2})$/
+    Time.utc parts[1], parts[2], parts[3], parts[4]
   end
 end
 
