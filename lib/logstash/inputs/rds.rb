@@ -19,11 +19,14 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
   config :instance_name, :validate => :string, :required => true
   config :log_file_name, :validate => :string, :required => true
   config :polling_frequency, :validate => :number, :default => 600
+  config :sincedb_path, :validate => :string, :default => nil
 
   def register
     @logger.info "Registering RDS input", :region => @region, :instance => @instance_name, :log_file => @log_file_name
     @database = Aws::RDS::DBInstance.new @instance_name, aws_options_hash
-    @sincedb = SinceDB::File.new File.join(ENV["HOME"], ".sincedb_" + Digest::MD5.hexdigest("#{@instance_name}+#{@log_file_name}"))
+
+    path = @sincedb_path || File.join(ENV["HOME"], ".sincedb_" + Digest::MD5.hexdigest("#{@instance_name}+#{@log_file_name}"))
+    @sincedb = SinceDB::File.new path
   end
 
   def run(queue)
