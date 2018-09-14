@@ -33,28 +33,33 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
     @thread = Thread.current
     Stud.interval(@polling_frequency) do
       @logger.debug "finding #{@log_file_name} for #{@instance_name} starting #{@sincedb.read} (#{@sincedb.read.to_i * 1000})"
-      logfiles = @database.log_files({
-        filename_contains: @log_file_name,
-        file_last_written: @sincedb.read.to_i * 1000,
-      })
-      logfiles.each do |logfile|
-        @logger.debug "downloading #{logfile.name} for #{@instance_name}"
-        more = true
-        marker = "0"
-        while more do
-          response = logfile.download({marker: marker})
-          response[:log_file_data].lines.each do |line|
-            @codec.decode(line) do |event|
-              decorate event
-              event.set "rds_instance", @instance_name
-              event.set "log_file", @log_file_name
-              queue << event
+      begin
+        logfiles = @database.log_files({
+          filename_contains: @log_file_name,
+          file_last_written: @sincedb.read.to_i * 1000,
+        })
+        logfiles.each do |logfile|
+          @logger.debug "downloading #{logfile.name} for #{@instance_name}"
+          more = true
+          marker = "0"
+          while more do
+            response = logfile.download({marker: marker})
+            response[:log_file_data].lines.each do |line|
+              @codec.decode(line) do |event|
+                decorate event
+                event.set "rds_instance", @instance_name
+                event.set "log_file", @log_file_name
+                queue << event
+              end
             end
+            more = response[:additional_data_pending]
+            marker = response[:marker]
           end
-          more = response[:additional_data_pending]
-          marker = response[:marker]
+          @sincedb.write (filename2datetime logfile.name)
         end
-        @sincedb.write (filename2datetime logfile.name)
+      rescue Aws::RDS::Errors::ServiceError
+        # the next iteration will resume at the same location
+        @logger.warn "caught AWS service error"
       end
     end
   end
