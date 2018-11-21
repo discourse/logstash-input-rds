@@ -1,5 +1,6 @@
-# Logstash Input RDS
+# Logstash Input Multi-RDS
 
+Forked from discourse/logstash-input-rds I needed competing consumer and multi-db support 
     input {
       rds {
         region => "us-west-2"
@@ -7,4 +8,3 @@
         log_file_name => "error/postgresql.log"
       }
     }
-
