@@ -9,10 +9,10 @@ require "time"
 
 Aws.eager_autoload!
 
-class LogStash::Inputs::Rds < LogStash::Inputs::Base
+class LogStash::Inputs::Multirds < LogStash::Inputs::Base
   include LogStash::PluginMixins::AwsConfig::V2
 
-  config_name "rds"
+  config_name "multirds"
   milestone 1
   default :codec, "plain"
 
@@ -22,7 +22,7 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
   config :sincedb_path, :validate => :string, :default => nil
 
   def register
-    @logger.info "Registering RDS input", :region => @region, :instance => @instance_name, :log_file => @log_file_name
+    @logger.info "Registering multi-RDS input", :region => @region, :instance => @instance_name, :log_file => @log_file_name
     @database = Aws::RDS::DBInstance.new @instance_name, aws_options_hash
 
     path = @sincedb_path || File.join(ENV["HOME"], ".sincedb_" + Digest::MD5.hexdigest("#{@instance_name}+#{@log_file_name}"))

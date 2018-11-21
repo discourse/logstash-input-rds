@@ -1,11 +1,11 @@
 Gem::Specification.new do |s|
-  s.name          = 'logstash-input-rds'
-  s.version       = '0.17.0'
-  s.summary       = 'Ingest RDS log files to Logstash'
+  s.name          = 'logstash-input-multi-rds'
+  s.version       = '0.0.1'
+  s.summary       = 'Ingest RDS log files to Logstash with competing consumers and multiple databases'
 
-  s.authors       = ['Andrew Schleifer']
-  s.email         = ['me@andrewschleifer.name']
-  s.homepage      = 'https://github.com/discourse/logstash-input-rds'
+  s.authors       = ['Robert Labrie']
+  s.email         = ['robert.labrie@gmail.com']
+  s.homepage      = 'https://github.com/robertlabrie/logstash-input-multi-rds'
 
   s.require_paths = ['lib']
   s.files = Dir['lib/**/*','spec/**/*','vendor/**/*','*.gemspec','*.md','CONTRIBUTORS','Gemfile','LICENSE','NOTICE.TXT']
