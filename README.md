@@ -41,3 +41,7 @@ The plugin will automatically create a DynamoDB table, but if you want to do it 
 * `client_id`: A unique identifier for a particular instance of logstash in the cluster
   * **required**: false
   * **default value**: `<hostname>:<uuid>`
+
+* `polling_frequency`: The frequency in seconds at which RDS is polled for new log events.
+  * **required**: false
+  * **default value**: `600`
