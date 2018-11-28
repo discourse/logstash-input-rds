@@ -180,7 +180,7 @@ class LogStash::Inputs::Multirds < LogStash::Inputs::Base
           rsp = @rds.download_db_log_file_portion(
             db_instance_identifier: log[:db_instance_identifier],
             log_file_name: log[:log_file_name],
-            marker: rec[:marker]
+            marker: marker
           )
           rsp[:log_file_data].lines.each do |line|
             @codec.decode(line) do |event|

@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name          = 'logstash-input-multirds'
-  s.version       = '0.1.0'
+  s.version       = '0.1.1'
   s.summary       = 'Ingest RDS log files to Logstash with competing consumers and multiple databases'
 
   s.authors       = ['Robert Labrie']
