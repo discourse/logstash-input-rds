@@ -20,9 +20,10 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
   config :log_file_name, :validate => :string, :required => true
   config :polling_frequency, :validate => :number, :default => 600
   config :sincedb_path, :validate => :string, :default => nil
+  config :number_of_lines, :validate => :number, :default => 10000
 
   def register
-    @logger.info "Registering RDS input", :region => @region, :instance => @instance_name, :log_file => @log_file_name
+    @logger.info "Registering RDS input", :region => @region, :instance => @instance_name, :log_file => @log_file_name, :number_of_lines => @number_of_lines
     @database = Aws::RDS::DBInstance.new @instance_name, aws_options_hash
 
     path = @sincedb_path || File.join(ENV["HOME"], ".sincedb_" + Digest::MD5.hexdigest("#{@instance_name}+#{@log_file_name}"))
@@ -43,7 +44,7 @@ class LogStash::Inputs::Rds < LogStash::Inputs::Base
           more = true
           marker = "0"
           while more do
-            response = logfile.download({marker: marker})
+            response = logfile.download({marker: marker, number_of_lines: @number_of_lines})
             response[:log_file_data].lines.each do |line|
               @codec.decode(line) do |event|
                 decorate event
